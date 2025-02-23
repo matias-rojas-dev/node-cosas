@@ -1,0 +1,17 @@
+{
+  "name": "02-bases",
+  "version": "0.0.1",
+  "description": "Primera app node",
+  "main": "app.js",
+  "scripts": {
+    "start": "node --watch 02-bases/src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matias Rojas",
+  "license": "ISC",
+  "dependencies": {
+    "get-age": "^1.0.1",
+    "uui": "^1.0.7",
+    "uuid": "^11.0.5"
+  }
+}
