@@ -2,7 +2,7 @@ export interface User {
   id: number
   name: string
 }
-const users: User[] = [
+export const users: User[] = [
   { id: 1, name: "Luffy" },
   { id: 2, name: "Zoro" },
   { id: 3, name: "Sanji" },
