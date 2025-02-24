@@ -4,8 +4,10 @@
   "description": "Primera app node",
   "main": "app.js",
   "scripts": {
-    "start": "node --watch 02-bases/src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon",
+    "build": "rimraf ./dist && tsc",
+    "start": "npm run build && node dist/app.js"
   },
   "author": "Matias Rojas",
   "license": "ISC",
@@ -15,5 +17,11 @@
     "uui": "^1.0.7",
     "uuid": "^11.0.5",
     "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.5",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   }
 }
