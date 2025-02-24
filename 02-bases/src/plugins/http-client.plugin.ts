@@ -1,4 +1,4 @@
-const axios = require("axios")
+import axios from "axios"
 
 export const httpClientPlugin = {
   GET_FETCH: async (url: string) => {

@@ -1,5 +1,3 @@
-const getAgePlugin = require("get-age")
-
 export const getAge = (birthday: string) => {
-  return getAgePlugin(birthday)
+  return new Date().getFullYear() - new Date(birthday).getFullYear()
 }
