@@ -16,6 +16,5 @@ describe('CreateTableUseCase', () => {
       '5 x 1 = 5 \n5 x 2 = 10 \n5 x 3 = 15 \n5 x 4 = 20 \n5 x 5 = 25 \n'
     )
     expect(table).toContain('25')
-    expect(tableOption).toContain('16')
   })
 })

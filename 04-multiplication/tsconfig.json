@@ -1,6 +1,6 @@
 {
-  "exclude": ["node_modules", "test", "dist"],
-  "include": ["src/**/*.ts"],
+"exclude": ["node_modules", "**/*.test.ts", "dist"],
+  "include": ["src/**/*.ts", "tests/save-file.use-case.test.ts"],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
