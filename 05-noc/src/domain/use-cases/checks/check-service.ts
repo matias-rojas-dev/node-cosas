@@ -1,3 +1,6 @@
+import { LogEntity, LogSeverityLevel } from '../../entities/log.entity'
+import { LogRepository } from '../../repository/log.repository'
+
 interface ChechServiceUseCase {
   execute(url: string): Promise<boolean>
 }
@@ -7,6 +10,7 @@ type ErrorCallback = (error: string) => void
 
 export class ChechService implements ChechServiceUseCase {
   constructor(
+    private readonly logRepository: LogRepository,
     private readonly successCallback: SuccessCallback,
     private readonly errorCallback: ErrorCallback
   ) {}
@@ -17,9 +21,15 @@ export class ChechService implements ChechServiceUseCase {
       if (!req.ok) throw new Error(`Error on check service ${url}`)
       console.log(`${url} is ok`)
       this.successCallback()
+
+      const log = new LogEntity(LogSeverityLevel.LOW, `Service ${url} is ok`)
+      this.logRepository.saveLog(log)
       return true
     } catch (error) {
-      console.log(`Error: ${error}`)
+      const errorMessage = `Error on check service ${url}`
+      const logError = new LogEntity(LogSeverityLevel.HIGH, errorMessage)
+      this.logRepository.saveLog(logError)
+
       this.errorCallback(`Error: ${error}`)
       return false
     }
