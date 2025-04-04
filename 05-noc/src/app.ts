@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { ServerApp } from './presentation/server'
 
 // IIFE asíncrona (Immediately Invoked Function Expression)
@@ -9,10 +10,12 @@ hace es llamar inmediatamente a la función main(), que a su vez inicia
 el servidor mediante ServerApp.start().
 
 */
+import { envs } from './config/plugins/envs.plugin'
 ;(async () => {
   main()
 })()
 
 function main() {
-  ServerApp.start()
+  // ServerApp.start()
+  console.log(envs.PORT)
 }
