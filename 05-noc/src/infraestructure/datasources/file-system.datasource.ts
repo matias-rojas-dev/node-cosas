@@ -27,7 +27,7 @@ export class FileSystemDataSource implements LogDataSource {
   }
 
   async saveLog(newLog: LogEntity): Promise<void> {
-    const logSchedule = `${newLog.level} - ${newLog.message} - ${newLog.createdAt}\n`
+    const logSchedule = `${newLog.level} - ${newLog.origin} - ${newLog.message} - ${newLog.createdAt}\n`
 
     fs.appendFileSync(this.allLogsPath, logSchedule)
 

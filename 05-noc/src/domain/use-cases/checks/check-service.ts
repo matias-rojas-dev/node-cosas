@@ -1,6 +1,8 @@
 import { LogEntity, LogSeverityLevel } from '../../entities/log.entity'
 import { LogRepository } from '../../repository/log.repository'
 
+export const ORIGIN_LOG = 'check-service.ts'
+
 interface ChechServiceUseCase {
   execute(url: string): Promise<boolean>
 }
@@ -22,12 +24,21 @@ export class ChechService implements ChechServiceUseCase {
       console.log(`${url} is ok`)
       this.successCallback && this.successCallback()
 
-      const log = new LogEntity(LogSeverityLevel.LOW, `Service ${url} is ok`)
+      const log = new LogEntity({
+        level: LogSeverityLevel.LOW,
+        message: `Service ${url} is ok`,
+        origin: ORIGIN_LOG,
+      })
+
       this.logRepository.saveLog(log)
       return true
     } catch (error) {
       const errorMessage = `Error on check service ${url}`
-      const logError = new LogEntity(LogSeverityLevel.HIGH, errorMessage)
+      const logError = new LogEntity({
+        level: LogSeverityLevel.HIGH,
+        message: errorMessage,
+        origin: ORIGIN_LOG,
+      })
       this.logRepository.saveLog(logError)
 
       this.errorCallback && this.errorCallback(`Error: ${error}`)
