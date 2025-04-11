@@ -15,8 +15,8 @@ export class ServerApp {
     console.log(envs.MAILER_EMAIL, envs.MAILER_SECRET_KEY)
 
     //send email
-    new SendEmailLogs(emailService, fileSystemLogRepository).execute(
-      'maigrojas@gmail.com'
-    )
+    // new SendEmailLogs(emailService, fileSystemLogRepository).execute(
+    //   'maigrojas@gmail.com'
+    // )
   }
 }

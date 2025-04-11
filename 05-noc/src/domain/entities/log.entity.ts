@@ -35,6 +35,7 @@ export class LogEntity {
     if (!level) throw new Error('Level is required')
     if (!createdAt) throw new Error('CreatedAt is required')
     if (!origin) throw new Error('Origin is required')
+
     const log = new LogEntity({
       level,
       message,

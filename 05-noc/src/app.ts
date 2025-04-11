@@ -1,5 +1,7 @@
 import 'dotenv/config'
 import { ServerApp } from './presentation/server'
+import { MongoDatabase } from './data/mongo/init'
+import { envs } from './config/plugins/envs.plugin'
 
 // IIFE asíncrona (Immediately Invoked Function Expression)
 /*
@@ -10,12 +12,15 @@ hace es llamar inmediatamente a la función main(), que a su vez inicia
 el servidor mediante ServerApp.start().
 
 */
-import { envs } from './config/plugins/envs.plugin'
 ;(async () => {
   main()
 })()
 
-function main() {
+async function main() {
+  await MongoDatabase.connect({
+    mongoUrl: envs.MONGO_URL,
+    dbName: envs.MONGO_DB_NAME,
+  })
   ServerApp.start()
   // console.log(envs.PORT)
 }
