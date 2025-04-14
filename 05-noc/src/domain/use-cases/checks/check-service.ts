@@ -3,14 +3,14 @@ import { LogRepository } from '../../repository/log.repository'
 
 export const ORIGIN_LOG = 'check-service.ts'
 
-interface ChechServiceUseCase {
+interface CheckServiceUseCase {
   execute(url: string): Promise<boolean>
 }
 
 type SuccessCallback = () => void | undefined
 type ErrorCallback = (error: string) => void | undefined
 
-export class ChechService implements ChechServiceUseCase {
+export class CheckService implements CheckServiceUseCase {
   constructor(
     private readonly logRepository: LogRepository,
     private readonly successCallback: SuccessCallback,
@@ -21,7 +21,6 @@ export class ChechService implements ChechServiceUseCase {
     try {
       const req = await fetch(url)
       if (!req.ok) throw new Error(`Error on check service ${url}`)
-      console.log(`${url} is ok`)
       this.successCallback && this.successCallback()
 
       const log = new LogEntity({

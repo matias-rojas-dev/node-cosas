@@ -1,22 +1,33 @@
 import { envs } from '../config/plugins/envs.plugin'
+import { LogSeverityLevel } from '../domain/entities/log.entity'
+import { LogRepository } from '../domain/repository/log.repository'
+import { CheckService } from '../domain/use-cases/checks/check-service'
 import { SendEmailLogs } from '../domain/use-cases/email/send-email-log'
 import { FileSystemDataSource } from '../infraestructure/datasources/file-system.datasource'
+import { MongoLogDataSource } from '../infraestructure/datasources/mongo-log.datasource'
 import { LogRepositoryImpl } from '../infraestructure/repositories/log.repository.implementation'
+import { CronService } from './cron/cron-service'
 import { EmailService } from './email/email.service'
 
-const fileSystemLogRepository = new LogRepositoryImpl(
-  new FileSystemDataSource()
+const logRepository = new LogRepositoryImpl(
+  // new FileSystemDataSource()
+  new MongoLogDataSource()
 )
 
 const emailService = new EmailService()
 
 export class ServerApp {
-  static start(): void {
-    console.log(envs.MAILER_EMAIL, envs.MAILER_SECRET_KEY)
+  static async start(): Promise<void> {
+    const logs = await logRepository.getLogs(LogSeverityLevel.MEDIUM)
+    console.log(logs)
+    // CronService.createJob('*/5 * * * * *', () => {
+    //   const url = 'https://fsdfmsd.com'
 
-    //send email
-    // new SendEmailLogs(emailService, fileSystemLogRepository).execute(
-    //   'maigrojas@gmail.com'
-    // )
+    //   new CheckService(
+    //     logRepository,
+    //     () => console.log(`${url} is ok`), // () => {},
+    //     (error) => console.log(error) // () => {}
+    //   ).execute(url)
+    // })
   }
 }
