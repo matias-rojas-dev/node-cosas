@@ -10,8 +10,8 @@ import { CronService } from './cron/cron-service'
 import { EmailService } from './email/email.service'
 
 const logRepository = new LogRepositoryImpl(
-  new FileSystemDataSource()
-  // new MongoLogDataSource()
+  // new FileSystemDataSource()
+  new MongoLogDataSource()
 )
 
 const emailService = new EmailService()
