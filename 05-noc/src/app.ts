@@ -22,17 +22,6 @@ async function main() {
     dbName: envs.MONGO_DB_NAME,
   })
 
-  // crear una colección
-  // const newLog = await LogModel.create({
-  //   level: 'high',
-  //   message: 'tes t 2 ',
-  //   origin: 'app.ts',
-  // })
-
-  // await newLog.save()
-
-  const logs = await LogModel.find().sort({ _id: -1 })
-  console.log(logs)
   ServerApp.start()
   // console.log(envs.PORT)
 }
