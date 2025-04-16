@@ -2,6 +2,7 @@ import { envs } from '../config/plugins/envs.plugin'
 import { LogSeverityLevel } from '../domain/entities/log.entity'
 import { LogRepository } from '../domain/repository/log.repository'
 import { CheckService } from '../domain/use-cases/checks/check-service'
+import { CheckServiceMultiple } from '../domain/use-cases/checks/check-service-multiple'
 import { SendEmailLogs } from '../domain/use-cases/email/send-email-log'
 import { FileSystemDataSource } from '../infraestructure/datasources/file-system.datasource'
 import { MongoLogDataSource } from '../infraestructure/datasources/mongo-log.datasource'
@@ -10,22 +11,24 @@ import { LogRepositoryImpl } from '../infraestructure/repositories/log.repositor
 import { CronService } from './cron/cron-service'
 import { EmailService } from './email/email.service'
 
-const logRepository = new LogRepositoryImpl(
-  // new FileSystemDataSource()
-  // new MongoLogDataSource()
-  new PostgresLogDataSource()
-)
+// const mongoLogRepository = new LogRepositoryImpl(
+//   // new FileSystemDataSource()
+//   // new MongoLogDataSource()
+//   new PostgresLogDataSource()
+// )
+const mongoLogRepository = new LogRepositoryImpl(new MongoLogDataSource())
+const postgresLogRepository = new LogRepositoryImpl(new PostgresLogDataSource())
 
 const emailService = new EmailService()
 
 export class ServerApp {
   static async start(): Promise<void> {
-    const logs = await logRepository.getLogs(LogSeverityLevel.MEDIUM)
-    console.log(logs)
+    // const logs = await logRepository.getLogs(LogSeverityLevel.MEDIUM)
+    // console.log(logs)
     CronService.createJob('*/5 * * * * *', () => {
       const url = 'https://google.com'
-      new CheckService(
-        logRepository,
+      new CheckServiceMultiple(
+        [mongoLogRepository, postgresLogRepository],
         () => console.log(`${url} is ok`), // () => {},
         (error) => console.log(error) // () => {}
       ).execute(url)

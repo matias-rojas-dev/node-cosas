@@ -18,7 +18,9 @@ export class PostgresLogDataSource implements LogDataSource {
         level: levelMap[log.level],
       },
     })
+    console.log('Postgres log created: ', newLog.id)
   }
+
   async getLogs(severityLevel: LogSeverityLevel): Promise<LogEntity[]> {
     const dbLogs = await prismaClient.logModel.findMany({
       where: {
