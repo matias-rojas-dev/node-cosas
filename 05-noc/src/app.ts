@@ -12,6 +12,7 @@ el servidor mediante ServerApp.start().
 
 */
 import { LogModel, MongoDatabase } from './data/mongo'
+import { PrismaClient } from '@prisma/client'
 ;(async () => {
   main()
 })()
@@ -21,6 +22,24 @@ async function main() {
     mongoUrl: envs.MONGO_URL,
     dbName: envs.MONGO_DB_NAME,
   })
+
+  const prisma = new PrismaClient({})
+
+  // const newLog = await prisma.logModel.create({
+  //   data: {
+  //     level: 'HIGH',
+  //     message: 'Test Prisma log',
+  //     origin: 'app.ts',
+  //   },
+  // })
+
+  const logs = await prisma.logModel.findMany({
+    where: {
+      level: 'MEDIUM',
+    },
+  })
+
+  console.log(logs)
 
   ServerApp.start()
   // console.log(envs.PORT)
