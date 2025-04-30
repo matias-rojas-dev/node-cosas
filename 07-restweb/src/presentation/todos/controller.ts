@@ -1,13 +1,23 @@
 import { Request, Response } from 'express'
 
+const todos = [
+  { id: 1, title: 'Todo 1', completed: false, createdAt: new Date() },
+  { id: 2, title: 'Todo 2', completed: true, createdAt: new Date() },
+  { id: 3, title: 'Todo 3', completed: false, createdAt: new Date() },
+]
+
 export class TodosController {
   constructor() {}
 
   public getTodos = (req: Request, res: Response) => {
-    res.json([
-      { id: 1, title: 'Todo 1', completed: false, createdAt: new Date() },
-      { id: 2, title: 'Todo 2', completed: true, createdAt: new Date() },
-      { id: 3, title: 'Todo 3', completed: false, createdAt: new Date() },
-    ])
+    res.json(todos)
+  }
+
+  public getTodoById = (req: Request, res: Response) => {
+    const { id } = req.params
+
+    const todo = todos.find((todo) => todo.id === +id)
+
+    todo ? res.json(todo) : res.status(404).json({ message: 'Todo not found' })
   }
 }
