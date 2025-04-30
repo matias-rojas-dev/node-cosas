@@ -24,6 +24,10 @@ export class Server {
     this.router = options.router
   }
   async start() {
+    // Middleware
+    this.app.use(express.json())
+    this.app.use(express.urlencoded({ extended: true }))
+
     // Pblic folder
     this.app.use(express.static(this.publicPath))
 

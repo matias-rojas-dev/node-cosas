@@ -20,4 +20,22 @@ export class TodosController {
 
     todo ? res.json(todo) : res.status(404).json({ message: 'Todo not found' })
   }
+
+  public createTodo = (req: Request, res: Response) => {
+    const { title } = req.body
+
+    if (!title) {
+      res.status(400).json({ message: 'Title is required' })
+    }
+
+    const newTodo = {
+      id: todos.length + 1,
+      title,
+      completed: false,
+      createdAt: new Date(),
+    }
+
+    todos.push(newTodo)
+    res.status(201).json(newTodo)
+  }
 }
