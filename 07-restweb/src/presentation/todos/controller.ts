@@ -38,4 +38,42 @@ export class TodosController {
     todos.push(newTodo)
     res.status(201).json(newTodo)
   }
+
+  public updateTodo = (req: Request, res: Response) => {
+    const { id } = req.params
+
+    const todoUpdate = todos.find((todo) => todo.id === +id)
+    if (!todoUpdate) {
+      res.status(404).json({ message: 'Todo not found' })
+      return
+    }
+
+    const { title, completed } = req.body
+
+    if (title) {
+      todoUpdate.title = title
+    }
+
+    if (completed !== undefined) {
+      todoUpdate.completed = completed
+    }
+
+    todoUpdate
+      ? res.json(todoUpdate)
+      : res.status(404).json({ message: 'Todo not found' })
+  }
+
+  public deleteTodo = (req: Request, res: Response) => {
+    const { id } = req.params
+
+    const todoIndex = todos.findIndex((todo) => todo.id === +id)
+
+    if (todoIndex === -1) {
+      res.status(404).json({ message: `Todo with id ${id} not found` })
+      return
+    }
+
+    todos.splice(todoIndex, 1)
+    res.status(204).send()
+  }
 }
