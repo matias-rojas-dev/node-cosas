@@ -1,79 +1,100 @@
 import { Request, Response } from 'express'
-
-const todos = [
-  { id: 1, title: 'Todo 1', completed: false, createdAt: new Date() },
-  { id: 2, title: 'Todo 2', completed: true, createdAt: new Date() },
-  { id: 3, title: 'Todo 3', completed: false, createdAt: new Date() },
-]
+import { prisma } from '../../data/postgres'
 
 export class TodosController {
   constructor() {}
 
-  public getTodos = (req: Request, res: Response) => {
+  public getTodos = async (req: Request, res: Response) => {
+    const todos = await prisma.todo.findMany({ orderBy: { id: 'asc' } })
     res.json(todos)
   }
 
-  public getTodoById = (req: Request, res: Response) => {
+  public getTodoById = async (req: Request, res: Response) => {
     const { id } = req.params
 
-    const todo = todos.find((todo) => todo.id === +id)
+    const todo = await prisma.todo.findUnique({
+      where: {
+        id: Number(id),
+      },
+    })
 
     todo ? res.json(todo) : res.status(404).json({ message: 'Todo not found' })
   }
 
-  public createTodo = (req: Request, res: Response) => {
-    const { title } = req.body
+  public createTodo = async (req: Request, res: Response) => {
+    const { text } = req.body
 
-    if (!title) {
+    if (!text) {
       res.status(400).json({ message: 'Title is required' })
     }
 
-    const newTodo = {
-      id: todos.length + 1,
-      title,
-      completed: false,
-      createdAt: new Date(),
-    }
+    const todo = await prisma.todo.create({
+      data: {
+        text,
+      },
+    })
 
-    todos.push(newTodo)
-    res.status(201).json(newTodo)
+    res.status(201).json(todo)
   }
 
-  public updateTodo = (req: Request, res: Response) => {
+  public updateTodo = async (req: Request, res: Response) => {
     const { id } = req.params
 
-    const todoUpdate = todos.find((todo) => todo.id === +id)
+    const todoUpdate = await prisma.todo.findUnique({
+      where: {
+        id: Number(id),
+      },
+    })
+
     if (!todoUpdate) {
       res.status(404).json({ message: 'Todo not found' })
       return
     }
 
-    const { title, completed } = req.body
+    const { text, completedAt } = req.body
 
-    if (title) {
-      todoUpdate.title = title
+    if (text) {
+      todoUpdate.text = text
     }
 
-    if (completed !== undefined) {
-      todoUpdate.completed = completed
+    if (completedAt !== undefined) {
+      todoUpdate.completedAt = completedAt
     }
+
+    await prisma.todo.update({
+      where: {
+        id: todoUpdate.id,
+      },
+      data: {
+        text: todoUpdate.text,
+        completedAt: todoUpdate.completedAt,
+      },
+    })
 
     todoUpdate
       ? res.json(todoUpdate)
       : res.status(404).json({ message: 'Todo not found' })
   }
 
-  public deleteTodo = (req: Request, res: Response) => {
+  public deleteTodo = async (req: Request, res: Response) => {
     const { id } = req.params
 
-    const todoIndex = todos.findIndex((todo) => todo.id === +id)
+    const todoDelete = await prisma.todo.findUnique({
+      where: {
+        id: Number(id),
+      },
+    })
 
-    if (todoIndex === -1) {
-      res.status(404).json({ message: `Todo with id ${id} not found` })
+    if (!todoDelete) {
+      res.status(404).json({ message: 'Todo not found' })
       return
     }
 
-    todos.splice(todoIndex, 1)
-    res.status(204).send()
+    await prisma.todo.delete({
+      where: {
+        id: Number(id),
+      },
+    })
+    res.status(204).send(todoDelete)
   }
 }
